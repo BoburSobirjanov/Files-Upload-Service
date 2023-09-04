@@ -10,9 +10,12 @@ import uz.pdp.filesuploadservice.repository.FileRepository;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.nio.file.DirectoryStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.stream.Stream;
 
 @Service
@@ -55,7 +58,16 @@ public class FileService {
             throw new IOException("Malformed URL for file: " + name, e);
         }
     }
-    public Stream<FileEntity> getAllFiles() {
-        return fileRepository.findAll().stream();
+    public List<String> getAllUploadedFileNames() throws IOException {
+        String uploadDir = "C://ForProjectFiles";
+        List<String> fileNames = new ArrayList<>();
+        try (DirectoryStream<Path> directoryStream = Files.newDirectoryStream(Path.of(uploadDir))) {
+            for (Path path : directoryStream) {
+                if (Files.isRegularFile(path)) {
+                    fileNames.add(path.getFileName().toString());
+                }
+            }
+        }
+        return fileNames;
     }
 }

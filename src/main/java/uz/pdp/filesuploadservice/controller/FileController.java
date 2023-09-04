@@ -49,7 +49,7 @@ public class FileController {
     }
 
     @GetMapping("/all")
-    public Stream<FileEntity> getAllFiles() {
-        return fileService.getAllFiles();
+    public List<String> getAllFiles() throws IOException {
+        return fileService.getAllUploadedFileNames();
     }
 }
