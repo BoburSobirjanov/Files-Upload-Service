@@ -27,7 +27,7 @@ public class FileService {
         }
 
         try {
-            String uploadDir = "C://Users//sobir//OneDrive//Рабочий стол//Projects//Files-Upload-Service//src//main//resources//uploads";
+            String uploadDir = "C://ForProjectFiles";
             Path uploadPath = Path.of(uploadDir);
             if (!Files.exists(uploadPath)) {
                 Files.createDirectories(uploadPath);
@@ -42,7 +42,7 @@ public class FileService {
 
     public Resource downloadFile(String name) throws IOException {
         try {
-            String uploadDir = "C://Users//sobir//OneDrive//Рабочий стол//Projects//Files-Upload-Service//src//main//resources//uploads";
+            String uploadDir = "C://ForProjectFiles";
             Path filePath = Path.of(uploadDir).resolve(name);
             Resource resource = new UrlResource(filePath.toUri());
 
