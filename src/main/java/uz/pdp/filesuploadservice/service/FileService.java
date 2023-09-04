@@ -1,12 +1,9 @@
 package uz.pdp.filesuploadservice.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import uz.pdp.filesuploadservice.entity.FileEntity;
-import uz.pdp.filesuploadservice.repository.FileRepository;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -16,12 +13,9 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Stream;
 
 @Service
 public class FileService {
-    @Autowired
-    private FileRepository fileRepository;
 
     public void uploadFile(MultipartFile file) throws IOException {
         String name = file.getOriginalFilename();
