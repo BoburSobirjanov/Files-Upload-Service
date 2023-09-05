@@ -1,8 +1,11 @@
 package uz.pdp.filesuploadservice.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,18 +33,45 @@ public class FileController {
         }
     }
     @GetMapping("/download/{fileName:.+}")
-    public ResponseEntity<Resource> downloadFile(@PathVariable String fileName) {
+    public ResponseEntity<?> downloadFile(@PathVariable String fileName) {
         try {
             Resource resource = fileService.downloadFile(fileName);
-            return ResponseEntity.ok()
-                    .body(resource);
+
+            if (resource.exists() && resource.isReadable()) {
+                return ResponseEntity.ok()
+                        .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"")
+                        .body(resource);
+            } else {
+                return ResponseEntity.notFound().build();
+            }
         } catch (IOException e) {
-            return ResponseEntity.notFound().build();
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error downloading file: " + e.getMessage());
         }
     }
 
+
     @GetMapping("/all")
-    public List<String> getAllFiles() throws IOException {
-        return fileService.getAllUploadedFileNames();
+    public ResponseEntity<byte[]> getAllUploadedFiles() {
+        try {
+            List<Resource> resources = fileService.getAllUploadedFiles();
+
+            if (!resources.isEmpty()) {
+                Resource resource = resources.get(0);
+                byte[] fileContent = IOUtils.toByteArray(resource.getInputStream());
+
+                HttpHeaders headers = new HttpHeaders();
+                headers.setContentDispositionFormData("attachment", resource.getFilename());
+
+                return ResponseEntity.ok()
+                        .headers(headers)
+                        .body(fileContent);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return ResponseEntity.notFound().build();
     }
+
 }

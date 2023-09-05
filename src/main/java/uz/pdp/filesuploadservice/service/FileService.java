@@ -1,6 +1,8 @@
 package uz.pdp.filesuploadservice.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,6 +18,8 @@ import java.util.List;
 
 @Service
 public class FileService {
+    @Autowired
+    private ResourceLoader resourceLoader;
 
     public void uploadFile(MultipartFile file) throws IOException {
         String name = file.getOriginalFilename();
@@ -40,8 +44,7 @@ public class FileService {
     public Resource downloadFile(String name) throws IOException {
         try {
             String uploadDir = "C://ForProjectFiles";
-            Path filePath = Path.of(uploadDir).resolve(name);
-            Resource resource = new UrlResource(filePath.toUri());
+            Resource resource = resourceLoader.getResource("file:" + uploadDir + "/" + name);
 
             if (resource.exists() && resource.isReadable()) {
                 return resource;
@@ -52,16 +55,20 @@ public class FileService {
             throw new IOException("Malformed URL for file: " + name, e);
         }
     }
-    public List<String> getAllUploadedFileNames() throws IOException {
+
+    public List<Resource> getAllUploadedFiles() throws IOException {
         String uploadDir = "C://ForProjectFiles";
-        List<String> fileNames = new ArrayList<>();
+        List<Resource> files = new ArrayList<>();
         try (DirectoryStream<Path> directoryStream = Files.newDirectoryStream(Path.of(uploadDir))) {
             for (Path path : directoryStream) {
                 if (Files.isRegularFile(path)) {
-                    fileNames.add(path.getFileName().toString());
+                    Resource resource = new UrlResource(path.toUri());
+                    if (resource.exists() && resource.isReadable()) {
+                        files.add(resource);
+                    }
                 }
             }
         }
-        return fileNames;
+        return files;
     }
 }
