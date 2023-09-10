@@ -20,6 +20,7 @@ import java.util.List;
 public class FileService {
     @Autowired
     private ResourceLoader resourceLoader;
+    private final String uploadDir = "C://ForProjectFiles";
 
     public void uploadFile(MultipartFile file) throws IOException {
         String name = file.getOriginalFilename();
@@ -28,8 +29,6 @@ public class FileService {
         }
 
         try {
-            String uploadDir = "C://ForProjectFiles";
-
             Path uploadPath = Path.of(uploadDir);
             if (!Files.exists(uploadPath)) {
                 Files.createDirectories(uploadPath);
@@ -44,7 +43,6 @@ public class FileService {
 
     public Resource downloadFile(String name) throws IOException {
         try {
-            String uploadDir = "C://ForProjectFiles";
             Resource resource = resourceLoader.getResource("file:" + uploadDir + "/" + name);
 
             if (resource.exists() && resource.isReadable()) {
@@ -58,7 +56,6 @@ public class FileService {
     }
     public void deleteFile(String name) throws IOException {
         try {
-            String uploadDir = "C://ForProjectFiles";
             Resource resource = resourceLoader.getResource("file:" + uploadDir + "/" + name);
 
             if (resource.exists()) {
