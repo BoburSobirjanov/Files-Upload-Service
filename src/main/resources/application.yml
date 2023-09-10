@@ -2,8 +2,6 @@ server:
   port: 8081
 
 spring:
-  application:
-    name: FILES-UPLOAD-SERVICE
   datasource:
     driver-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/files_upload_service?useSSL=false
@@ -15,16 +13,12 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
       ddl-auto: update
+
+
+
   servlet:
     multipart:
       file-size-threshold: 2KB
-      max-file-size: 20MB
-      max-request-size: 30MB
-
-eureka:
-  client:
-    service-url:
-      default-url: ${EUREKA_URI:http://134.209.20.129:8761/eureka/}
-    instance:
-      preferIpAddress: true
+      max-file-size: 200MB
+      max-request-size: 300MB
 
