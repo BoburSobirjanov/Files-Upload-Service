@@ -56,6 +56,23 @@ public class FileService {
             throw new IOException("Malformed URL for file: " + name, e);
         }
     }
+    public void deleteFile(String name) throws IOException {
+        try {
+            String uploadDir = "C://ForProjectFiles";
+            Resource resource = resourceLoader.getResource("file:" + uploadDir + "/" + name);
+
+            if (resource.exists()) {
+                boolean deleted = resource.getFile().delete();
+                if (!deleted) {
+                    throw new IOException("Unable to delete file: " + name);
+                }
+            } else {
+                throw new IOException("File not found: " + name);
+            }
+        } catch (MalformedURLException e) {
+            throw new IOException("Malformed URL for file: " + name, e);
+        }
+    }
 
     public List<Resource> getAllUploadedFiles() throws IOException {
         String uploadDir = "C://ForProjectFiles";

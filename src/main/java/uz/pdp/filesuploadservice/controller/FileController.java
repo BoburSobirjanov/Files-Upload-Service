@@ -51,6 +51,16 @@ public class FileController {
         }
     }
 
+    @DeleteMapping("/delete/{name}")
+    public ResponseEntity<String> deleteFile(@PathVariable String name) {
+        try {
+            fileService.deleteFile(name);
+            return new ResponseEntity<>("File deleted successfully", HttpStatus.OK);
+        } catch (IOException e) {
+            return new ResponseEntity<>("Error deleting file: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 
     @GetMapping("/all")
     public ResponseEntity<byte[]> getAllUploadedFiles() {
