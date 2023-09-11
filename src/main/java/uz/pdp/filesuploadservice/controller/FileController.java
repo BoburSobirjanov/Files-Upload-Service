@@ -67,6 +67,7 @@ public class FileController {
         try {
             List<Resource> resources = fileService.getAllUploadedFiles();
 
+
             if (!resources.isEmpty()) {
                 Resource resource = resources.get(0);
                 byte[] fileContent = IOUtils.toByteArray(resource.getInputStream());
