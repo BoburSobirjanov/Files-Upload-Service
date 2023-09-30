@@ -4,9 +4,9 @@ server:
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/files_upload_service?useSSL=false
-    username: postgres
-    password: BOBUR2255
+    url: jdbc:postgresql://hospital-db-do-user-14558489-0.b.db.ondigitalocean.com:25060/file_upload_db
+    username: doadmin
+    password: AVNS_ZsEHpELLbPwTvabmXJN
   jpa:
     properties:
       hibernate:
